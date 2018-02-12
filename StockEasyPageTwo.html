@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset = "utf-8">
+    <title> Baye's Theorem Rankings </title>
+    <h1 class="title"> Baye's Theorem Rankings</h1>
+  </head>
+
+  <style>
+    table, th, td {
+      border: 1px solid black;
+    }
+    th, td {
+      padding: 15px;
+    }
+    table {
+      border-spacing: 5px;
+    }
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+    table#t01 {
+      width: 100%;
+      background-color: #E0E1E1; /*CHANGE COLOR*/
+    }
+    table#t01 tr:nth-child(even) {
+      background-color: #eee; /*CHANGE COLOR*/
+    }
+    table#t01 tr:nth-child(odd) {
+      background-color: #fff; /*CHANGE COLOR*/
+    }
+    table#t01 th {
+      color: white; /*CHANGE COLOR*/
+      background-color: black;  /*CHANGE COLOR*/
+    }
+    .profile{
+      overflow: hidden; /*this makes the sticky bar faint*/
+      background-color: #333;
+      position:fixed; /*Makes it always on top of page */
+      top:0;
+      width:100%;
+      z-index:2; /*NEEDED TO MAKE THIS ON TOP OF OTHER TEXT */
+
+    }
+    .profile .assets{
+      float: left;
+      display: block;
+      color: #f2f2f2;
+      padding: .25vw .35vw;
+      text-decoration: none;
+    }
+
+    .assets{
+      font-size: 2.25vw;
+      text-align:center;
+    }
+
+    .link{
+      color: white;
+      font-size: 2.25vw;
+      position:relative;
+      right: 7vw;
+      padding: .25vw .35vw;
+    }
+
+    .pic{
+      position:absolute;
+      right: .4vw;
+      padding: .25vw .35vw;
+      width: 10vw;
+      height: 10vh;
+    }
+
+    .title{
+      position: relative;
+      display: inline-block;
+      padding-top: 1vw;
+      padding-bottom:2vw;
+      font-size: 2.5vw;
+      text-align:left;
+      left: 36%;
+      top:5.5vw;
+    }
+
+    #table{
+      position: relative;
+      left: 20%;
+      top:3vw;
+    }
+    #table tr:nth-child(even){background-color: #f2f2f2;}
+
+    th{
+      font-size: 5vh;
+      color: #333333;
+      background-color: #19A92D; /*______COLOR HERE_____*//*#8cd98c; /*old color: #194d19*/
+    }
+
+    tr{
+      font-size: 4.5vh;
+    }
+  </style>
+
+  <body>
+    <!--header-->
+    <div class = "profile">
+      <h3 class = "assets"> Your Liquid Assets: $100000000</h3>
+      <h3 class = "assets"> Your Portfolio Value: $5000</h3>
+      <h3 class = "pic" align = "right"> <img src="stockeasylogo.png" alt="StockEasy Logo" class = "pic"> </a> </h3>
+      <h3 class = "link" align = "right"> <a href = "StockEasy.html" class = "link"> Back </a> </h3>
+    </div>
+
+    <font size="6" face="Courier New" >
+    <table id="table" style="width:60%" id="t01" class="table">
+      <tr>
+        <th>Stock</th>
+        <th>Ranking</th>
+        <th>% Certainty Increase</th>
+      </tr>
+      <tr>
+        <td>APPL</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>GOOG</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>JPM</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>FB</td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+
+  </body>
+
+  <script type="text/javascript">
+    /* finds startDate from given html parameter*/
+    var date = location.search.substring(1); //receives an 8 digit int that is month_month_day_day_year_year_year_year
+    console.log(date);
+
+    /* update function: calls itself continuously and updates display (with delay)
+    //update();
+    update(){
+      /*
+      update
+      table
+      fetch(url)
+        .then((resp) => resp.json()) //ensuring its JSON
+        .then(function(data) {
+            for(i=0; i<data.results.length; i++){ //iterate through data
+
+            }
+      })
+      var table = document.getElementById('table');
+      table.rows[1].cells[1].innerHTML = 'Hello';
+      */
+      /*
+      update assets
+
+      var delay = 1000*(1 + Math.floor(Math.random() * 10)); //random delay between 1 and 10 seconds
+      setTimeout(updateChart, delay); //calls itself
+    }*/
+  </script>
+
+</html>

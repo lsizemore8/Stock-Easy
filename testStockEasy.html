@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset = "utf-8" content="math.js | basic usage">
+    <link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.14.2/math.min.js"></script>
+    <script src='https://unpkg.com/simple-statistics@5.1.0/dist/simple-statistics.js'> </script>
+    <title> Today's Stock </title>
+  </head>
+
+	<style>
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+    body{
+      background-color: #FFFFFF;
+    }
+    /* div for everything pertaining to the dropdown */
+    .dropDown{
+      position: relative;
+      display: inline-block;
+      padding-top: 1vw;
+      padding-bottom:2vw;
+      height:25%;
+      width:50%;
+
+
+    }
+    .stockDropDown{
+     text-align:left;
+      left:auto;
+      top:1.2vw;
+    }
+    .bidDropDown{
+      position:absolute;
+      top: 33.98vw;
+      left: 76vw;
+      z-index:1;
+
+    }
+    /*The list in the dropdown */
+    .dropDownContent{
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 48%;
+      box-shadow: 0vw 1vw 1.5vw 0vw rgba(0,0,0,0.2);
+      z-index: 1;
+      text-align:left;
+      left:0vw;
+
+
+    }
+    .bidDDownContent{
+        min-width: 23%;
+    }
+    /*the button that would be hovered over to see the dropdown */
+    .dropBtn{
+         background-color: #19A92D; /*______COLOR HERE_____*/
+         color: white;
+         padding: 1vw;
+         font-size: 2vw;
+         border: none;
+         cursor: pointer;
+         width: 23vw;
+    }
+    /*fixing size of the ask button */
+    #bidBtn{
+      width:11vw;
+      height:4vw;
+      position:absolute;
+      left:78vw;
+      top:33vw;
+    }
+     #askBtn{
+       width:11vw;
+       height:4vw;
+       position:absolute;
+       left:78vw;
+       top: 38vw;
+     }
+    /*Fixing the links themselves */
+    .dropDownContent a {
+      color: black;
+      padding: 1vw 1.5vw;
+      font-size: 1.5vw;
+      align-content: left;
+      text-decoration: none;
+      display: block;
+    }
+    /*All of the hovering code */
+    .show {display:block;}
+    .dropDownContent a:hover {
+        background-color: #19A92D; /*______COLOR HERE_____*/
+    }
+    .dropDown:hover .dropDownContent {
+     display: block;
+    }
+    /*This is for the text area */
+    #getPrice{
+      position:absolute;
+      top: 36vw;
+      left: 58vw;
+      font-size:1.70rem;
+      width: 15vw;
+      height: 4vw;
+     }
+     .pricetag{
+       position:absolute;
+       top: 31vw;
+       left: 61vw;
+       font-size:1.70rem;
+       width: 15vw;
+       height: 4vw;
+     }
+    /*This is for the black bar itself in the sticky bar */
+    .profile{
+      overflow: hidden; /*this makes the sticky bar faint*/
+      background-color: #333;
+      position:fixed; /*Makes it always on top of page */
+      top:0;
+      width:100%;
+      z-index:2; /*NEEDED TO MAKE THIS ON TOP OF OTHER TEXT */
+    }
+    .main{
+      margin-top: 90px; /*So nav bar and other text don't overlap too much */
+    }
+    /*the top bar */
+    .profile .assets{
+      float: left;
+      display: block;
+      color: #f2f2f2;
+      padding: .25vw .35vw;
+      text-decoration: none;
+    }
+
+    .assets{
+      font-size: 2.25vw;
+      text-align:center;
+      color: #f2f2f2;
+    }
+
+    .link{
+     color: white;
+     font-size: 2.25vw;
+     position:relative;
+     right: 7vw;
+     padding: .25vw .35vw;
+   }
+
+    .BThrmLink{
+      position: relative;
+      color: #f2f2f2;
+      font-family: 'Dosis', sans-serif;
+    }
+
+    #chartContainer{
+      margin-top:1vw;
+      top: 5vw;
+    }
+
+    table{
+      color:black;
+      z-index:0;
+      margin-top:1vw;
+      width: 40%;
+      border-collapse:collapse;
+    }
+
+    table, th, td{
+      border: 1px solid black;
+    }
+
+    #bidTable{
+      position:absolute;
+      left:55vw;
+      top:9vw;
+    }
+    #eqTable{
+      position:absolute;
+      top: 53vw;
+      z-index: 0;
+      left:30%;
+      width:40%;
+      padding-bottom:5vw;
+    }
+    th{
+      height:3vw;
+      font-size:3rem;
+      padding:1vw;
+      background-color: #19A92D; /*______COLOR HERE_____*//*#8cd98c; /*old color: #194d19*/
+      color:white;
+    }
+    td{
+      height:1.5vw;
+      font-size:1.5rem;
+      padding:1vw;
+    }
+    #bidTable tr:nth-child(even){background-color: #f2f2f2;}
+
+    #bidTable tr:hover {background-color: #19A92D;} /*______COLOR HERE_____*/
+/*The CSS for the paragraph elements*/
+    #dateText{
+      left:38.5vw;
+    }
+    #startDateText{
+          left:36.5vw;
+          top: 7.1vw;
+        }
+
+    .date{
+      position:absolute;
+      top:9vw;
+      font-size:1.5rem;
+    }
+    .startDate{
+      position: absolute;
+      top:7vw;
+      left:25.5vw;
+      font-size:1.5rem;
+    }
+    .dateTitle{
+      left:25.5vw;
+    }
+
+    .pic{
+     position:absolute;
+     right: .4vw;
+     padding: .25vw .35vw;
+     width: 10vw;
+     height: 10vh;
+   }
+   .eqText{
+     position: absolute;
+     font-size:3rem;
+     text-align:center;
+     bottom:auto;
+     left:23%;
+   }
+   #qExplanation{ /*The text that explains what linReg and Bayes' are */
+      text-align:center;
+   }
+   footer{
+     display:block;
+     overflow: hidden; /*this makes the sticky bar faint*/
+     background-color: #333;
+     position:absolute; /*Makes it always on top of page */
+     top:80vw;
+     width:100%;
+     z-index:2; /*NEEDED TO MAKE THIS ON TOP OF OTHER TEXT */
+   }
+  </style>
+
+  <body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--The navbar -->
+    <div class = "profile">
+      <h3 class = "assets"> Your Liquid Assets: </h3><h3 class = "assets" id = "liqAsset">$1000</h3>
+      <h3 class = "assets"> Your Portfolio Value: $5000</h3>
+      <h3 class = "pic" align = "right"> <img src="stockeasylogo.png"
+        alt="StockEasy Logo" class = "pic"> </a> </h3>
+      <h3 class = "link" align = "right"> <a href = "StockEasyPageTwo.html" class = "link">
+        Bayes' Theorem Rankings </a> </h3>
+    </div>
+
+    <div class = "main">
+      <section class = "graph">
+        <!--Drop down code -->
+        <div class = "dropDown stockDropDown">
+
+          <input type="button" value="Choose which Company" class = "dropBtn"
+          id="dBtn"></input>
+          <!--<button class = "dropBtn" id = "dBtn" value = "Choose which Company"> Choose which Company
+          </button> -->
+          <div id = "dropDownComp" class = "dropDownContent">
+          <a href = "#" id = "APPL" onclick = "changeGraphType(0)"> APPL </a>
+            <a href = "#" id = "GOOG" onclick = "changeGraphType(1)"> GOOG </a>
+            <a href = "#" id = "FB" onclick = "changeGraphType(2)">  FB  </a>
+            <a href = "#" id = "JPM" onclick = "changeGraphType(3)">  JPM </a>
+          </div>
+      </div>
+      <!-- Info for the date -->
+      <p class = "startDate"> <b> Start date is:  </p>
+        <p class = "startDate" id = "startDateText"> </p>
+      <p class = "date dateTitle"> <b>Today's date is: </p>
+      <p id = "dateText" class = "date"> </p> </b>
+      <div id="chartContainer" style="height: 370px; width: 50%;"></div>
+      </section>
+    </div>
+    <!--Import statement for the chart -->
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+    <!--the equations section -->
+    <div class = "equations">
+      <p class = "eqText"> Use these to understand the data! </p>
+      <!--The equations table -->
+      <table id = "eqTable">
+        <thead>
+          <tr>
+            <th class = "eqHead">Type of Equation </th>
+            <th class = "eqHead"> Prediction </th>
+          </tr>
+        </thead>
+        <tr>
+          <td> Linear Regression <img class = "q"src = "questionMark.png" alt =
+             "questionMark" height="12px" width = "12px" onmouseover = "getExplanation(0)"
+             onmouseout = "removeExplanation()"></td>
+          <td id = "linRegVal"> </td>
+        </tr>
+        <tr>
+          <td> Baye's Theorem <img class = "q" src = "questionMark.png" alt =
+            "questionMark" height="12px" width = "12px" onmouseover = "getExplanation(1)"
+            onmouseout = "removeExplanation()"></td>
+          <td id = "bayeThrmVal"> </td>
+        </tr>
+      </table>
+      <p id = "qExplanation" class = "locationP"> </p>
+    </div>
+
+    <div style = " overflow-y: auto;"> <!-- Adds scrolling for responsiveness-->
+</div>
+	<!--Drop down for the ask or bid -->
+    <input type="button" value="Sell" class = "dropBtn"
+     id="bidBtn" onclick="sellStocks()"></input>
+     <input type = "button" value = "Buy" class = "dropBtn" id = "askBtn"> </input>
+    <!-- <button id = "bidBtn" class = "dropBtn" type="button" onclick = "sellStocks()"> Bid </button> -->
+  <!--  <button id = "askBtn" class = "dropBtn"type="button" onclick = "buyStocks()"> Ask </button> -->
+
+   <textarea name = "getPrice" id = "getPrice"></textarea>
+   <p class = "pricetag"> Enter price</p>
+
+   <!--Table for the bid and ask -->
+    <table id = "bidTable">
+      <thead>
+        <tr>
+          <th> <b>Bid</b> </th>
+          <th> <b>Ask</b> </th>
+        </tr>
+      </thead>
+      <tr>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+          <td></td>
+          <td></td>
+      </tr>
+    </table>
+    <footer>
+      <p class = assets> built by Laura, Bryan, Dominik </p>
+<!--end of HTML -->
+
+    <script>
+      var compName = ["APPL", "GOOG", "FB", "JPM", "Choose which Company"];
+      var askOBid = ["Ask", "Bid"];
+
+      var yVals = [3.57211, 3.57831, 3.57381, 3.58562, 3.60137, 3.59523, 3.58284, 3.58172, 3.57132, 3.56462];
+  	  function changeGraphType(num){
+        var currentName = compName[num];
+        document.getElementById("dBtn").value = currentName;
+      }
+      function changeAskType(num){
+        var currentName = askOBid[num];
+        document.getElementById("dBtnBid").value = currentName;
+      }
+      var table = document.getElementById('bidTable');
+
+	  //Shows the explanation of the math behind the finance thingy
+      function getExplanation(num){
+        var arrEx = ["This sees how much the <br> price is influenced by time",
+         "This describes how likely <br> a certain event is to occur"]
+        var locExX = ["46.5","45"]//The ideal x location for the text to be for each box
+        var locExY = ["66", "70"];//The ideal y location for the text to be for each box
+        var pGraph = document.getElementById("qExplanation");
+        //Style the paragraph text
+        pGraph.innerHTML = arrEx[num];
+        pGraph.style.position = "absolute";
+        pGraph.style.left = locExX[num] + "vw";
+        pGraph.style.border = "3px outset black";
+        pGraph.style.top = locExY[num] + "vw";
+        pGraph.style.zIndex = 3;
+        pGraph.style.backgroundColor = "#FFFFFF";
+        pGraph.style.color = "black";
+      }
+      function removeExplanation(){
+        document.getElementById("qExplanation").innerHTML = "";
+        document.getElementById("qExplanation").style.color = "white";
+        document.getElementById("qExplanation").style.border = "0px outset white";
+      }
+      var liquidAssets = 1000;
+      function sellStocks(){
+
+        console.log("selling Stock");
+        var price = document.getElementById("getPrice").value;
+        for(r=1;r<5;r++){
+          for(c = 0; c<2; c++){
+          var s = table.rows[r].cells[c].innerHTML;
+          if(s.substring(1, s.indexOf(' '))==price){
+            var tableVal = table.rows[r].cells[0].innerHTML;
+            liquidAssets += Number(price)*Number(s.substring(s.indexOf('f')+2,s.indexOf('s')-1));
+            console.log(liquidAssets);
+            document.getElementById("liqAsset").innerHTML = liquidAssets;
+          }
+        }//for
+      }//other for
+      }
+      <!--_______FROM HERE DOWN________-->
+      const start_Date = "Jan.1, 2000";       <!--_______START DATE________-->
+      const url_Base = "https://www.wolframcloud.com/objects/user-3311bbd9-accd-415b-8d38-db100afe92b7/tickerData?date=";<!--_______URL________-->
+      const url_Cal ="https://www.wolframcloud.com/objects/user-3311bbd9-accd-415b-8d38-db100afe92b7/dates?date=Oct.16,2017";
+      const starting_Num_Data_Vals = 20;
+      var firstDay =url_Cal.substring(url_Cal.length-11, url_Cal.length);
+      document.getElementById("startDateText").innerHTML = firstDay;
+
+      //__Make Calendar Array
+      fetch(url_Cal)
+        .then((resp) => resp.json())
+        .then(function(data) {    //___________________________FIRST .THEN
+            var cal = data;
+            //__Set First 20 Days
+            var curDay = 0; //int for index of curDay in cal[]
+            var withinDayCount = starting_Num_Data_Vals; //bc it starts w/ 20 data values
+
+            url1 = url_Base + cal[curDay];
+            fetch(url1)
+              .then((resp) => resp.json())
+              .then(function(data) {    //____________________________________________________________SECOND .THEN
+                var vals = data.APPL.data.slice(0,starting_Num_Data_Vals); //data values
+                //__Makes starting graph
+                var valsRegArray = vals; //USED FOR STANDARD DEVIATION
+                vals = vals.map((a) => {
+                  return {
+                    y:a
+                  };
+                });
+                var chart = new CanvasJS.Chart("chartContainer", {
+                  animationEnabled: false,
+                  theme: "light2",
+                  title:{
+                    text: "Stock Flucuations"
+                  },
+                  axisY:{
+                    includeZero: false
+                  },
+                  data: [{
+                    type: "line",
+                    dataPoints: vals
+                  }]
+                });
+                chart.render();  //graph created
+
+                //Makes starting bids and asks
+                //generate num based on standard distr and multiply by variance
+                var variance = (math.std(valsRegArray))*(math.std(valsRegArray));
+                var mean = math.mean(valsRegArray);
+                var shares = Math.round((Math.random()*90)+10)*100 / 100;
+                function normal_random(mean, variance) {
+				  var V1, V2, S;
+				  do {
+					var U1 = Math.random();
+					var U2 = Math.random();
+					V1 = 2 * U1 - 1;
+					V2 = 2 * U2 - 1;
+					S = V1 * V1 + V2 * V2;
+				  } while (S > 1);
+
+				  X = Math.sqrt(-2 * Math.log(S) / S) * V1;
+				//Y = Math.sqrt(-2 * Math.log(S) / S) * V2;
+				  X = mean + Math.sqrt(variance) * X;
+				//Y = mean + Math.sqrt(variance) * Y ;
+				  return X;
+				}
+				for(r=1;r<5;r++){
+					for(c=0;c<2;c++){
+						shares = Math.round((Math.random()*100)+1)*100 / 100;
+						table.rows[r].cells[c].innerHTML = "$" + Math.round((normal_random(mean, variance)) * 100) / 100
+									+ " at " + shares + " shares";
+					}
+				}//table filled
+
+				//fill lin equation
+				var y = -1;
+				valsLinReg = valsRegArray.map((a) => {
+                  y++;
+                  return {
+                    y:a
+                  };
+                });
+        var arr = [];
+        for (var i = 0; i<valsLinReg.length; i++){
+          arr[i] = [[i, valsLinReg[i].y]];
+        }
+        var x = arr[0];
+        var y = arr[1];
+        var z = arr[2];
+        var zz = arr[3];
+
+      			var l = ss.linearRegressionLine(ss.linearRegression(x, y, z, zz)); // x and y coordinates have to match
+     			document.getElementById("linRegVal").innerHTML = "$" + Math.round(l(11)*100)/100;//You can change the number in l to be the future valu
+
+                //fill in starting money
+                document.getElementById("liqAsset").innerHTML = "$" + liquidAssets;
+
+                updateSuper();
+                function updateSuper(){
+                	url1 = url_Base + cal[curDay];
+					fetch(url1)
+					  .then((resp) => resp.json())
+					  .then(function(data) {    //____________________________________________________________THIRD .THEN
+
+						function updateDate () {
+							document.getElementById("dateText").innerHTML = cal[curDay].substring(0, 17);
+						}
+
+						/* addData: adds data to chart__FINSIH? */
+						function addData(valAdd) {
+							vals.push({y: valAdd});
+							valsRegArray.push(valAdd);
+							chart = new CanvasJS.Chart("chartContainer", {
+							  animationEnabled: false,
+							  theme: "light2",
+							  title:{
+								text: "Stock Flucuations"
+							  },
+							  axisY:{
+								includeZero: false
+							  },
+							  data: [{
+								type: "line",
+								dataPoints: vals
+							  }]
+							});
+							chart.render(); //0 ensures no animation
+						}
+
+						/* updateChart function */
+						function updateChart(){
+							if(withinDayCount < data.APPL.data.length){
+								addData(data.APPL.data[withinDayCount]);
+								withinDayCount++;
+							}
+							else{
+								withinDayCount = 0;
+								curDay++;
+								updateDate();
+								updateSuper();
+								updateChart();
+							}
+
+						}
+
+						/*updateEquations function*/
+						function updateEquations(){
+							y = -1;
+							valsLinReg = valsRegArray.map((a) => {
+							  y++;
+							  return {
+								y:a
+
+							  };
+							});
+              var arr = [];
+              for (var i = 0; i<valsLinReg.length; i++){
+                arr[i] = [[i, valsLinReg[i].y]];
+              }
+              //Get last four values to do lin reg on
+              var x = arr[arr.length-4];
+              var y = arr[arr.length-3];
+              var z = arr[arr.length-2];
+              var zz = arr[arr.length-1];
+							l = ss.linearRegressionLine(ss.linearRegression(x, y, z, zz)); // x and y coordinates have to match
+     						document.getElementById("linRegVal").innerHTML = "$" + Math.round(l(arr.length+1)*100)/100;//You can change the number in l to be the future vals
+						}
+
+						/*updateBuyAndSell function*/
+						function updateBuyAndAsk(){
+							variance = (math.std(valsRegArray))*(math.std(valsRegArray));
+                			mean = math.mean(valsRegArray);
+							for(r=1;r<5;r++){
+								for(c=0;c<2;c++){
+									shares = Math.round((Math.random()*100)+1)*100 / 100;
+									table.rows[r].cells[c].innerHTML = "$" + Math.round((normal_random(mean, variance)) * 100) / 100
+									+ " at " + shares + " shares";
+								}
+							}//table filled
+						}
+
+						/*updateAssets function*/
+						function updateAssets(){
+
+						}
+						/* update function: calls itself continuously (with delay)*/
+						update();
+						function update(){
+							console.log("update called");
+							updateChart(); //updates chart by adding data ALSO INCREMENTS DAY, RESETS WITHINDAY, AND UPDATES DATE IF NEED BE
+						  	updateBuyAndAsk();
+						  	updateEquations();
+						  /*
+						  update
+						  equations
+						  */
+						  /*
+						  update
+						  portfolio
+						  value
+						  */
+						  console.log("starting delay");
+						  var delay = 15000; //1000*(1 + Math.floor(Math.random() * 10)); //random delay between 1 and 10 seconds
+						  setTimeout(update, delay); //calls itself
+						}
+
+
+					});// ____________________________________________________________END THIRD .THEN
+				}//end updateSuper
+
+              }) //____________________________________________________________ END INNER .THEN
+              .catch(function(error) {
+                console.log(error);
+            });
+
+          }) //____________________________________________________________ END .THEN
+        .catch(function(error) {
+          console.log(error);
+      });
+
+    </script>
+    </div>
+  </body>
+</html>
